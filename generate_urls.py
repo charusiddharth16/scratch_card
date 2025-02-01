@@ -1,10 +1,10 @@
 # File: generate_urls.py
 
 # Define your GitHub Pages base URL for the dynamic HTML file
-base_url = "https://rahulverma2512.github.io/scratch-cards/dynamic_scratch_card.html?cardUrl="
+base_url = " https://charusiddharth16.github.io/scratch-cards/dynamic_scratch_card.html?cardUrl="
 
 # Define the path to your scratch card images
-image_base_url = "https://rahulverma2512.github.io/scratch-cards/scratch_card_"
+image_base_url = " https://charusiddharth16.github.io/scratch-cards/scratch_card_"
 
 # Read the list of participants
 with open('participants.txt', 'r') as file:
