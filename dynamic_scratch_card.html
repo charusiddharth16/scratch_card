@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch Card</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .message {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .canvas-container {
+            position: relative;
+            max-width: 150px;
+            max-height: 150px;
+            width: 150px;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 20px; /* Rounded corners */
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #canvas {
+            border-radius: 20px; /* Ensure the canvas also has rounded corners */
+        }
+    </style>
+</head>
+<body>
+    <div class="message">Scratch here to see your team number!</div>
+    <div class="canvas-container">
+        <canvas id="canvas" width="150" height="150"></canvas>
+    </div>
+
+    <script>
+        function init() {
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'gray';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            function getOffset(e) {
+                var rect = canvas.getBoundingClientRect();
+                var offsetX, offsetY;
+                if (e.touches && e.touches.length > 0) {
+                    offsetX = e.touches[0].clientX - rect.left;
+                    offsetY = e.touches[0].clientY - rect.top;
+                } else {
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+                }
+                return { x: offsetX, y: offsetY };
+            }
+
+            function scratch(e) {
+                var offset = getOffset(e);
+                ctx.globalCompositeOperation = 'destination-out'; // Make scratches transparent
+                ctx.beginPath();
+                ctx.arc(offset.x, offset.y, 20, 0, Math.PI * 2, true); // Larger brush for smoother effect
+                ctx.fill();
+            }
+
+            function handleMove(e) {
+                e.preventDefault();
+                scratch(e);
+            }
+
+            function startScratching(e) {
+                e.preventDefault();
+                canvas.addEventListener('mousemove', handleMove, false);
+                canvas.addEventListener('touchmove', handleMove, false);
+                scratch(e);
+            }
+
+            function stopScratching() {
+                canvas.removeEventListener('mousemove', handleMove, false);
+                canvas.removeEventListener('touchmove', handleMove, false);
+            }
+
+            // Event listeners for start and stop of scratching
+            canvas.addEventListener('mousedown', startScratching, false);
+            canvas.addEventListener('mouseup', stopScratching, false);
+            canvas.addEventListener('touchstart', startScratching, false);
+            canvas.addEventListener('touchend', stopScratching, false);
+
+            window.addEventListener('resize', function() {
+                var container = document.querySelector('.canvas-container');
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+                ctx.fillRect(0, 0, canvas.width, canvas.height); // Reset the canvas
+            });
+
+            // Fetch the scratch card image URL from query parameters
+            var urlParams = new URLSearchParams(window.location.search);
+            var cardUrl = urlParams.get('cardUrl');
+            if (cardUrl) {
+                var img = new Image();
+                img.src = cardUrl;
+                img.onload = function() {
+                    canvas.style.backgroundImage = 'url(' + cardUrl + ')';
+                    canvas.style.backgroundSize = 'cover'; // Ensures image fits well
+                };
+            } else {
+                console.error("No cardUrl parameter found in the URL.");
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
