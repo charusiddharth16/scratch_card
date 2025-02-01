@@ -8,7 +8,6 @@ colors = [
     (0, 128, 0),    # Green
     (135, 206, 235),# Sky Blue
     (255, 69, 0),   # Red-Orange
-    (255, 255, 255),  # White
     (0, 128, 128),    # Teal Blue
     (139, 0, 0),      # Dark Red (Firebrick)
     (0, 0, 139),      # Dark Blue
